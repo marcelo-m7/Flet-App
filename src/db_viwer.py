@@ -1,14 +1,7 @@
 import flet as ft
 import pymysql
 from pymysql import Error
-
-# Configurações do banco de dados
-DB_CONFIG = {
-    'host': '172.18.95.134',
-    'user': 'todo_user',
-    'password': '12345',
-    'database': 'todoapp'
-}
+from config import DB_CONFIG
 
 def fetch_data(table_name):
     """Busca todos os dados de uma tabela."""

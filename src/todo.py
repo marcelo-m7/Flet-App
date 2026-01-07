@@ -3,6 +3,7 @@ import pymysql
 from pymysql import Error
 import os
 from cryptography.fernet import Fernet
+from config import DB_CONFIG, FERNET_KEY
 
 class Task(ft.Column):
     def __init__(self, task_name, task_status_change, task_delete):
@@ -86,12 +87,7 @@ class TodoApp(ft.Column):
         self.page = page
         
         # Conexão com o banco de dados usando pymysql
-        self.db_connection = pymysql.connect(
-            host='172.18.95.134',
-            user='todo_user',
-            password='12345',
-            database='todoapp'
-        )
+        self.db_connection = pymysql.connect(**DB_CONFIG)
         self.cursor = self.db_connection.cursor()
         
         # Restante do código...

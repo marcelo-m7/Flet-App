@@ -1,6 +1,7 @@
 import pymysql
 from pymysql import Error
 import flet as ft
+from config import DB_CONFIG
 
 class AuthManager:
     def __init__(self, page: ft.Page):
@@ -17,12 +18,7 @@ class AuthManager:
     def _create_db_connection(self):
         """Cria uma conexão com o banco de dados MySQL."""
         try:
-            connection = pymysql.connect(
-                host='172.18.95.134',
-                user='todo_user',
-                password='12345',
-                database='todoapp'
-            )
+            connection = pymysql.connect(**DB_CONFIG)
             return connection
         except Error as e:
             print("Erro ao conectar ao banco de dados:", e)

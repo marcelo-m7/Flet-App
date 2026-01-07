@@ -1,14 +1,8 @@
 import os
 from dotenv import load_dotenv
 
-def load_env_file(env_file_path="src/.env"):
-    """
-    Carrega variáveis de ambiente de um arquivo .env.
-
-    Args:
-        env_file_path (str): Caminho para o arquivo .env.
-    """
-    load_dotenv(env_file_path)
+# Load environment variables from .env file
+load_dotenv()
 
 def get_env_variable(key, default=None):
     """
@@ -22,3 +16,17 @@ def get_env_variable(key, default=None):
         Valor da variável de ambiente ou o valor padrão.
     """
     return os.getenv(key, default)
+
+
+# Database Configuration
+DB_CONFIG = {
+    'host': get_env_variable('DB_HOST', '172.18.95.134'),
+    'user': get_env_variable('DB_USER', 'todo_user'),
+    'password': get_env_variable('DB_PASSWORD', '12345'),
+    'database': get_env_variable('DB_NAME', 'todoapp')
+}
+
+# Application Configuration
+FLET_PORT = get_env_variable('FLET_PORT', '8000')
+FLET_HOST = get_env_variable('FLET_HOST', '0.0.0.0')
+FERNET_KEY = get_env_variable('FERNET_KEY', None)

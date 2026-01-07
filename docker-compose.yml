@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: flet_app_db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_password}
+      MYSQL_DATABASE: todoapp
+      MYSQL_USER: ${MYSQL_USER:-todo_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-12345}
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - flet_network
+
+  flet_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flet_app
+    environment:
+      DB_HOST: mysql
+      DB_USER: ${MYSQL_USER:-todo_user}
+      DB_PASSWORD: ${MYSQL_PASSWORD:-12345}
+      DB_NAME: todoapp
+      FLET_PORT: 8000
+      FLET_HOST: 0.0.0.0
+    ports:
+      - "${FLET_PORT:-8000}:8000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - ./src:/app/src
+      - ./assets:/app/assets
+    networks:
+      - flet_network
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+
+networks:
+  flet_network:
+    driver: bridge
